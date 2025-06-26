@@ -1,0 +1,98 @@
+// Register File
+// Each thread within each core has it's own register file with 13 free registers and 3 read only registers
+// Read only registers hold the block_id, thread_id and threads_per_block values used for SIMD
+module register_file(
+		parameter threads_per_block =4,
+		parameter thread_id = 0,
+		parameter data_bits = 8)
+	   (
+		input wire clk,
+		input wire reset,
+		input wire enable,
+		
+		input reg[7:0] block_id,// used for kernel execution
+		
+		input reg[2:0] core_state,//state
+		
+		//Instruction Signals
+		input reg[3:0] decoded_rd_address,
+		input reg[3:0] decoded_rs_address,
+		input reg[3:0] decoded_rt_address,
+		
+		//Control Signals
+		input reg decoded_reg_write_enable,
+		input reg[1:0] decoded_reg_input_mux,
+		input reg[data_bits-1:0] decoded_immediate,
+		
+		//Thread Unit Outputs
+		input reg[data_bits-1:0] alu_out,
+		input reg[data_bits-1:0] lsu_out,
+		
+		//Registers
+		output reg[7:0] rs,
+		output reg[7:0] rt
+		);
+		localparam ARITHEMETIC = 2'b00,
+			MEMORY = 2'b01,
+			CONSTANT = 2'b10;
+			
+		//16 registers per thread (13 free and 3 read only registers)
+		reg[7:0] registers[15:0];
+		
+		always @(posedge clk) begin
+			if (reset) begin
+				//Empty rs,rt
+				rs <= 0;
+				rt <= 0;
+				//Intialize all free registers
+				registers[0] <= 8'b0;
+				registers[1] <= 8'b0;
+				registers[2] <= 8'b0;
+				registers[3] <= 8'b0;
+				registers[4] <= 8'b0;
+				registers[5] <= 8'b0;
+				registers[6] <= 8'b0;
+				registers[7] <= 8'b0;
+				registers[8] <= 8'b0;
+				registers[9] <= 8'b0;
+				registers[10] <= 8'b0;
+				registers[11] <= 8'b0;
+				registers[12] <= 8'b0;
+				//Intialize read only register
+				registers[13] <= 8'b0;              //block_id
+				registers[14] <= THREADS_PER_BLOCK; 
+				registers[15] <= THREAD_ID;
+			end
+			else if(enable) begin
+				//Update the block_id when a new block is issued from dispatcher
+				registers[13] <= block_id;
+				
+				//Fill rs/rt when core_state = REQUEST
+				if(core_state == 3'b011)begin 
+					rs <= registers[decoded_rs_address];
+					rt <= registers[decoded_rt_address];
+				end
+				
+				//Store rd when core_state = UPDATE
+				if(core_state == 3'b110) begin
+					// Only allow writing to R0-R12
+					if(decoded_reg_write_enable && decoded_rd_address <13) begin
+						case(decoded_reg_input_mux)
+							ARITHMETIC: begin
+							//ADD, SUB, MUL, DIV
+							registers[decoded_rd_address] <= alu_out;
+							end
+							MEMORY: begin
+							//LDR
+							registers[decoded_rd_address] <= lsu_out;
+							end
+							CONSTANT: begin
+							//CONSTANT
+							registers[decoded_rd_address] <= decoded_immediate;
+							end
+						endcase
+					end
+				end
+			end
+		end
+endmodule						
