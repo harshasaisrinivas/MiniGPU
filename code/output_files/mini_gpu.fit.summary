@@ -1,0 +1,18 @@
+Fitter Status : Successful - Fri Jul 04 23:08:21 2025
+Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+Revision Name : mini_gpu
+Top-level Entity Name : gpu
+Family : MAX 10
+Device : 10M08DAF484C8G
+Timing Models : Final
+Total logic elements : 5,931 / 8,064 ( 74 % )
+    Total combinational functions : 4,791 / 8,064 ( 59 % )
+    Dedicated logic registers : 2,253 / 8,064 ( 28 % )
+Total registers : 2253
+Total pins : 183 / 250 ( 73 % )
+Total virtual pins : 0
+Total memory bits : 0 / 387,072 ( 0 % )
+Embedded Multiplier 9-bit elements : 8 / 48 ( 17 % )
+Total PLLs : 0 / 2 ( 0 % )
+UFM blocks : 0 / 1 ( 0 % )
+ADC blocks : 0 / 1 ( 0 % )

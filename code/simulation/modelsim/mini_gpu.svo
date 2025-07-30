@@ -1,0 +1,57 @@
+// Copyright (C) 2018  Intel Corporation. All rights reserved.
+// Your use of Intel Corporation's design tools, logic functions 
+// and other software and tools, and its AMPP partner logic 
+// functions, and any output files from any of the foregoing 
+// (including device programming or simulation files), and any 
+// associated documentation or information are expressly subject 
+// to the terms and conditions of the Intel Program License 
+// Subscription Agreement, the Intel Quartus Prime License Agreement,
+// the Intel FPGA IP License Agreement, or other applicable license
+// agreement, including, without limitation, that your use is for
+// the sole purpose of programming logic devices manufactured by
+// Intel and sold by Intel or its authorized distributors.  Please
+// refer to the applicable agreement for further details.
+
+// VENDOR "Altera"
+// PROGRAM "Quartus Prime"
+// VERSION "Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
+
+// DATE "07/04/2025 23:08:41"
+
+// 
+// Device: Altera 10M08DAF484C8G Package FBGA484
+// 
+
+// 
+// This Verilog file should be used for ModelSim-Altera (SystemVerilog) only
+// 
+
+`timescale 1 ps/ 1 ps
+
+module gpu (
+	clk,
+	reset,
+	start,
+	done,
+	device_control_write_enable,
+	device_control_data,
+	program_mem_read_valid,
+	program_mem_read_address,
+	program_mem_read_ready,
+	program_mem_read_data,
+	data_mem_read_valid,
+	data_mem_read_address,
+	data_mem_read_ready,
+	data_mem_read_data,
+	data_mem_write_valid,
+	data_mem_write_address,
+	data_mem_write_data,
+	data_mem_write_ready);
+input 	clk;
+input 	reset;
+input 	start;
+output 	done;
+input 	device_control_write_enable;
+input 	[7:0] device_control_data;
+output 	[0:0] program_mem_read_valid;
+output 	[
